@@ -651,7 +651,7 @@ void Frame::UpdateStatusLine(const Interval *interval)
   }
   else
   {
-    s.Printf(wxT("Interval -/%d"), markedVideo.getTotalIntervals() - 1);
+    s.Printf(wxT("Interval -/%d"), markedVideo.getTotalIntervals());
     SetStatusText(s, StatusInterval);
   }
 }
