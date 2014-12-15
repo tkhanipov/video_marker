@@ -85,10 +85,6 @@ class Frame: public wxFrame
     void OnSetMoveSize(wxCommandEvent &);
     void OnSetLittleMoveSize(wxCommandEvent &);
     
-    void OnMarkCutStart(wxCommandEvent &);
-    void OnMarkCutEnd(wxCommandEvent &);
-    void OnCutVideo(wxCommandEvent &);
-
     void OnToggleAutoLoadMarkup(wxCommandEvent &);
 
     void OnDumpInterval(wxCommandEvent &);
@@ -97,8 +93,6 @@ class Frame: public wxFrame
     void OnDumpAllIntervalsTo(wxCommandEvent &);
     void OnDeleteHeights(wxCommandEvent &);
     void OnCopyShortMovieName(wxCommandEvent &);
-    void OnSetVideoCutsDir(wxCommandEvent &);
-    void OnSetVideoCutterPath(wxCommandEvent &);
 
     void OnGoToFrame(wxCommandEvent &);
     void OnGoToMovieStart(wxCommandEvent &);
@@ -170,9 +164,6 @@ class Frame: public wxFrame
 
     int intervalStartFrame;
 
-    int cutStartFrame;
-    int cutEndFrame;
-    
   private:
     void InitMenu();
 
@@ -186,6 +177,5 @@ class Frame: public wxFrame
 const int StatusGeneral = 0;    // id for SetStatusText
 const int StatusInterval = 1;
 const int StatusFrame = 2;
-const int StatusCutBorders = 3;
-const int StatusMouse = 4;
-const int StatusPlayback = 5;
+const int StatusMouse = 3;
+const int StatusPlayback = 4;
