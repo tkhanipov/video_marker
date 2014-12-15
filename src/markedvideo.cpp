@@ -74,13 +74,14 @@ bool MarkedVideo::loadVideo(const std::string &name, const char *markupName)
   {
     markupPath = markupName;
     LOG_INFO("Using custom markup '" << markupPath << "'...");
+    loadMarkup(markupPath);
   }
   else if (_autoLoadMarkup_flag)
   {
     markupPath = guessMarkupName(name);
     LOG_INFO("Trying to load markup automatically from '" << markupPath << "'...");
+    loadMarkup(markupPath);
   }
-  loadMarkup(markupPath);
   return true;
 }
 
