@@ -43,4 +43,5 @@ target_link_libraries(video_marker
   swscale
 
   ${wxWidgets_LIBRARIES}
+  pugixml
 )

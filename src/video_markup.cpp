@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include <cstdlib>
 #include <cmath>
 #include <cfloat>
+#include <pugixml.hpp>
 #include "video_markup.h"
 
 namespace video_markup {
@@ -37,14 +38,60 @@ void Markup::clear()
 
 bool Markup::save(const char *fileName) const
 {
-  return false;
+  pugi::xml_document doc;
+  pugi::xml_node root = doc.append_child("video_markup");
+  if (startFrame > 0)
+    root.append_attribute("start_frame") = startFrame;
+  if (endFrame > 0)
+    root.append_attribute("end_frame") = endFrame;
+  for (const_iterator it = begin(); it != end(); ++it)
+  {
+    pugi::xml_node i = root.append_child("interval");
+    i.append_attribute("start") = it->start;
+    i.append_attribute("end") = it->end;
+    i.append_attribute("type") = it->type;
+    i.append_attribute("y_border") = it->y_border;
+    if (!it->comment.empty())
+      i.append_child("comment").text() = it->comment.c_str();
+    for (Interval::Labels::const_iterator label = it->labels.begin(); label != it->labels.end(); ++label)
+      i.append_child("label").text() = label->c_str();
+  }
+  return doc.save_file(fileName);
 }
 
 bool Markup::load(const char *fileName)
 {
-  return false;
   clear();
   startFrame = endFrame = -1;
+  pugi::xml_document doc;
+  pugi::xml_parse_result res = doc.load_file(fileName);
+  if (!res)
+    return false;
+  pugi::xml_node root = doc.document_element();
+  if (strcmp(root.name(), "video_markup"))
+    return false;
+  startFrame = root.attribute("start_frame").as_int(-1);
+  endFrame = root.attribute("end_frame").as_int(-1);
+  for (pugi::xml_node i = root.child("interval"); i; i = i.next_sibling("interval"))
+  {
+    if (!i.attribute("start") || !i.attribute("end") || !i.attribute("type") || !i.attribute("y_border"))
+      goto failure;
+    Interval interval;
+    interval.start    = i.attribute("start").as_int();
+    interval.end      = i.attribute("end").as_int();
+    interval.type     = i.attribute("type").as_int();
+    interval.y_border = i.attribute("y_border").as_int();
+    interval.comment = i.child("comment").text().as_string();
+    for (pugi::xml_node l = i.child("label"); l; l = l.next_sibling("label"))
+      interval.labels.insert(l.text().as_string());
+    if (push(interval) < 0)
+      goto failure;
+  }
+  return true;
+failure:
+  clear();
+  startFrame = endFrame = -1;
+  return false;
 }
 
 int Markup::find(int frame) const

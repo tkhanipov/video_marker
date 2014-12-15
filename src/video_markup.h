@@ -48,7 +48,8 @@ struct Interval
   int y_border;
   std::string comment;
 
-  std::set<std::string> labels;
+  typedef std::set<std::string> Labels;
+  Labels labels;
 
   bool hasLabel(std::string const& label) const { return labels.find(label) != labels.end(); }
 
