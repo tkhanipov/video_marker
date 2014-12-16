@@ -1,10 +1,11 @@
 project(video_marker)
 
+option(wxWidgets_ROOT_DIR "Path where wxWidgets 2.8 is installed" "")
 find_package(wxWidgets 2.8 EXACT COMPONENTS core base)
 if(NOT wxWidgets_FOUND)
-  message(FATAL_ERROR "Cannot find wxWidgets. Try passing -DwxWidgets_ROOT_DIR=path/to/wxWidgets to cmake")
+  message(FATAL_ERROR "Cannot find wxWidgets. Try to set wxWidgets_ROOT_DIR cmake option manually")
 endif()
-include_directories(${wxWidgets_INCLUDE_DIRS})
+include(${wxWidgets_USE_FILE})
 
 add_executable(video_marker WIN32 
   app.cpp
