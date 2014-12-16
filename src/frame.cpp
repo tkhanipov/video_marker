@@ -41,7 +41,7 @@ THE SOFTWARE.
 const int IntervalDumpMargin = 20;
 
 // settings' names
-const char *seDefaultLogDir     = "defaultLogDir";
+const char *seDefaultMarkupDir  = "defaultMarkupDir";
 const char *seDefaultVideoDir   = "defaultVideoDir";
 const char *seDefaultDumpDir    = "defaultDumpDir";
 const char *seDefaultShotsDir   = "shotsDir";
@@ -456,13 +456,13 @@ void Frame::OnLoadMarkup(wxCommandEvent &)
   wxSplitPath(markedVideo.getVideoName().c_str(), 0, &videoFileName, &videoFileExt);
   wxString defaultLogName = videoFileName + wxT(".") + videoFileExt + wxT(".xml");
 
-  wxFileDialog dialog(this, wxT("Load markup"), wxConfigBase::Get()->Read(seDefaultLogDir), defaultLogName, wxT("*.xml"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  wxFileDialog dialog(this, wxT("Load markup"), wxConfigBase::Get()->Read(seDefaultMarkupDir), defaultLogName, wxT("*.xml"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (dialog.ShowModal() == wxID_OK)
   {
     if (markedVideo.loadMarkup(dialog.GetPath().c_str()))
     {
       markupChanged = false;
-      wxConfigBase::Get()->Write(seDefaultLogDir, dialog.GetDirectory());
+      wxConfigBase::Get()->Write(seDefaultMarkupDir, dialog.GetDirectory());
       Synchronize(true);
     }
     else
@@ -497,7 +497,7 @@ void Frame::OnSaveMarkupAs(wxCommandEvent &)
   wxString videoFileExt;
   wxSplitPath(markedVideo.getVideoName().c_str(), 0, &videoFileName, &videoFileExt);
   wxString defaultLogName = videoFileName + wxT(".") + videoFileExt + wxT(".xml");
-  wxFileDialog dialog(this, wxT("Save markup As..."), wxConfigBase::Get()->Read(seDefaultLogDir), defaultLogName, wxT("*.xml"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+  wxFileDialog dialog(this, wxT("Save markup As..."), wxConfigBase::Get()->Read(seDefaultMarkupDir), defaultLogName, wxT("*.xml"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
   if (dialog.ShowModal() == wxID_OK)
   {
@@ -505,7 +505,7 @@ void Frame::OnSaveMarkupAs(wxCommandEvent &)
     {
       markupChanged = false;
       markedVideo.setMarkupName(dialog.GetPath().c_str());
-      wxConfigBase::Get()->Write(seDefaultLogDir, dialog.GetDirectory());
+      wxConfigBase::Get()->Write(seDefaultMarkupDir, dialog.GetDirectory());
       LOG_INFO("Markup saved to " << dialog.GetPath());
     }
     else
@@ -683,7 +683,8 @@ bool Frame::Synchronize(bool force)
   const Interval *interval = markedVideo.getCurrentInterval();
 
   DrawCenterLine(dc, interval);
-  DrawHorizLine(dc, cutTop, wxColour(250, 200 , 200));
+  if (interval)
+    DrawHorizLine(dc, interval->y_border, wxColour(250, 200 , 200));
 
   DrawIntervalAttributes(dc, interval);
   UpdateStatusLine(interval);
@@ -705,16 +706,6 @@ void Frame::OnLeftDown(wxMouseEvent &event)
 
   markupChanged = true;
   Synchronize();
-}
-
-void Frame::OnDeleteHeights(wxCommandEvent &)
-{
-  Interval *interval = markedVideo.getCurrentInterval();
-  if (interval)
-  {
-    interval->y_border = -1;
-    Synchronize();
-  }
 }
 
 void Frame::OnStepForward(wxCommandEvent &)
@@ -788,7 +779,7 @@ void Frame::OnSaveScreenshotAs(wxCommandEvent &)
 void Frame::OnAbout(wxCommandEvent &)
 {
   wxMessageBox(wxT(
-    "Program for linear video markup\n"
+    "video_marker: program for linear video markup\n"
     "Copyright (c) 2014 Timur M. Khanipov <khanipov@gmail.com>\n\n"
     "Permission is hereby granted, free of charge, to any person obtaining a copy"
     "of this software and associated documentation files (the \"Software\"), to deal"
@@ -928,7 +919,6 @@ bool Frame::OpenVideo(const char *videoFileName, const char *markupName, int sta
 
   intervalStartFrame = -1;
   oldWidth = oldHeight = -1;
-  cutTop = -1;
 
   SetTitle(videoFileName);
   SetStatusText(wxEmptyString);
@@ -974,9 +964,8 @@ void Frame::OnSliderUpdate(wxScrollEvent &e)
 }
 
 Frame::Frame(const CmdLineArguments &cmdLineArguments)
-  : wxFrame(0, wxID_ANY, wxT("Marker"))
+  : wxFrame(0, wxID_ANY, wxT("video_marker"))
   , intervalStartFrame(-1)
-  , cutTop(-1)
   , oldWidth(-1)
   , oldHeight(-1)
   , pureBitmap(wxBitmap(640, 480))

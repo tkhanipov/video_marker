@@ -2,6 +2,8 @@ Contents:
   Introduction
   Windows build
   Linux build
+  API
+  Redistribution
   License
 
 
@@ -24,6 +26,7 @@ This tool has the following features:
   - labeling intervals;
   - navigation between intervals;
   - scrolling to video position;
+  - setting horizontal line (left click) for an interval;
   - dumping intervals to directories as set of images;
   - gamma correction;
   - creating screenshots.
@@ -50,7 +53,7 @@ Windows build was tested on a machine running Windows 7 with the MS Visual Studi
    - build wxWidgets with MS Visual Studio 9 2008 from build/msw/wx.dsp using appropriate configuration.
      DO NOT enable unicode support
 
-2. Build video_marker:
+3. Build video_marker:
    cd path/to/video_marker
    mkdir build.vc9
    cd build.vc9
@@ -61,7 +64,7 @@ Windows build was tested on a machine running Windows 7 with the MS Visual Studi
 
    Open video_marker.sln and build.
 
-3. Run video_marker from bin/win32.
+4. Run video_marker from bin/win32.
 
 
 
@@ -108,6 +111,49 @@ In the following instructions it is presumed that a similar machine is used.
    make
 
 5. Run video_marker from bin/linux64
+
+
+
+API
+===
+
+If you wish to tailor video_marker to fit your needs you should have a look at
+the following places:
+- video_markup.h/cpp: markup attributes and file format;
+- markedvideo.cpp: guessMarkupName - function to guess markup name from video
+  name to load markup automatically;
+- frame.cpp: Frame::OpenImage - there resides code which converts 24 bit RGB
+  MinImg to wxImage. Note that MinImg supports stride while wxImage does not.
+  If you need to open non 24 bit RGB video files you should enhance the code.
+
+For historical reasons video_marker uses MinImg structure in a few places. MinImg
+is a simple wrapper around plain bitmap format. video_marker uses it only for 
+the case of 24 bit RGB format. It is not essential for video_marker, feel free
+to replace it with some other structure.
+
+You may have a look at videoreader.h/cpp, it contains an isolated video reading
+class which is fairly easy to use in some other program.
+
+Logger in logger.h/cpp is the oldest piece of code here. It's ugly so I appreciate
+everyone to replace it with some other stuff (for example, wxWidgets logger).
+
+
+
+REDISTRIBUTION
+==============
+
+When redistributing source code or binaries based on video_marker not only must
+you include the video_marker license but also copyrights (and whatever more the
+corresponding licenses demand) of the thirdparty libraries. video_marker uses
+the following third party libraries/sources:
+- pugixml;
+- wxWidgets;
+- minimg.h and mintyp.h;
+- inttypes.h, cstdint and stding.h (for old MS Visual Studio compilers only);
+- libav*.
+
+pugixml, minimg.h, mintyp.h, inttypes.h, cstdint, stdint.h and libav* licenses may
+be found in the source tree whereas wxWidgets licenses should be found elsewhere.
 
 
 

@@ -36,11 +36,6 @@ END_EVENT_TABLE()
 void Canvas::OnLeftDown(wxMouseEvent &event)
 {
   frame->OnLeftDown(event);
-  //int y = event.GetPosition().y;
-  //if (y <= frame->cutAxis || y <= frame->cutTop)
-  //  return;
-  //frame->cutBottom = y;
-  //frame->Synchronize();
 }
 
 void Canvas::OnMotion(wxMouseEvent &event)

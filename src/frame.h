@@ -91,7 +91,6 @@ class Frame: public wxFrame
     void OnDumpIntervalTo(wxCommandEvent &);
     void OnDumpAllIntervals(wxCommandEvent &);
     void OnDumpAllIntervalsTo(wxCommandEvent &);
-    void OnDeleteHeights(wxCommandEvent &);
     void OnCopyShortMovieName(wxCommandEvent &);
 
     void OnGoToFrame(wxCommandEvent &);
@@ -121,7 +120,6 @@ class Frame: public wxFrame
     bool OpenVideo(const char *videoFileName, const char *markupName = 0, int startFrame = 0);
 
     void DrawHorizLine(wxMemoryDC &dc, int y, const wxColour &colour);
-    int cutBottom, cutAxis, cutTop;
 
     wxTimer m_playbackTimer;
     int m_fastPlaybackStep;
