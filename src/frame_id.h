@@ -55,8 +55,6 @@ enum {
   ID_DUMP_ALL_INTERVALS_TO,
   ID_GOTO_INTERVAL,
   ID_CALC_CHECKSUM,
-  ID_SET_VIDEO_CUTS_DIR,
-  ID_SET_VIDEO_CUTTER_PATH,
   ID_GOTO_INTERVAL_END,
   ID_GOTO_INTERVAL_START,
   ID_MARK_NEW_START,
@@ -75,9 +73,6 @@ enum {
   ID_SET_MOVIE_END_FRAME,
   ID_UNSET_MOVIE_START_FRAME,
   ID_UNSET_MOVIE_END_FRAME,
-  ID_MARK_CUT_START_FRAME,
-  ID_MARK_CUT_END_FRAME,
-  ID_CUT_VIDEO,
   
   ID_INTERVAL_LABEL_FUNNY,
   ID_INTERVAL_LABEL_INTERESTING,
@@ -120,8 +115,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
   EVT_MENU(   ID_DUMP_ALL_INTERVALS_TO,          Frame::OnDumpAllIntervalsTo        )
   EVT_MENU(   ID_GOTO_INTERVAL,                  Frame::OnGotoInterval              )
   EVT_MENU(   ID_CALC_CHECKSUM,                  Frame::OnCalcChecksum              )
-  EVT_MENU(   ID_SET_VIDEO_CUTS_DIR,             Frame::OnSetVideoCutsDir           )
-  EVT_MENU(   ID_SET_VIDEO_CUTTER_PATH,          Frame::OnSetVideoCutterPath        )
   EVT_MENU(   ID_GOTO_INTERVAL_END,              Frame::OnGotoIntervalEnd           )
   EVT_MENU(   ID_GOTO_INTERVAL_START,            Frame::OnGotoIntervalStart         )
   EVT_MENU(   ID_MARK_NEW_START,                 Frame::OnMarkNewStart              )
@@ -135,9 +128,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
   EVT_MENU(   ID_SET_MOVIE_END_FRAME,            Frame::OnSetMovieEndFrame          )
   EVT_MENU(   ID_UNSET_MOVIE_START_FRAME,        Frame::OnUnsetMovieStartFrame      )
   EVT_MENU(   ID_UNSET_MOVIE_END_FRAME,          Frame::OnUnsetMovieEndFrame        )
-  EVT_MENU(   ID_MARK_CUT_START_FRAME,           Frame::OnMarkCutStart              )
-  EVT_MENU(   ID_MARK_CUT_END_FRAME,             Frame::OnMarkCutEnd                )
-  EVT_MENU(   ID_CUT_VIDEO,                      Frame::OnCutVideo                  )
 
   EVT_MENU(   ID_INTERVAL_LABEL_FUNNY,           Frame::OnIntervalLabel             )
   EVT_MENU(   ID_INTERVAL_LABEL_INTERESTING,     Frame::OnIntervalLabel             )

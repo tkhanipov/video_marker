@@ -45,8 +45,6 @@ const char *seDefaultLogDir     = "defaultLogDir";
 const char *seDefaultVideoDir   = "defaultVideoDir";
 const char *seDefaultDumpDir    = "defaultDumpDir";
 const char *seDefaultShotsDir   = "shotsDir";
-const char *seVideoCutsDir      = "videoCutsDir";
-const char *seVideoCutterPath   = "videoCutterPath";
 const char *seMoveSize          = "moveSize";
 const char *seLittleMoveSize    = "littleMoveSize";
 const char *seFastPlayFps       = "fastPlayFps";
@@ -249,26 +247,6 @@ void Frame::OnCalcChecksum(wxCommandEvent &)
     for (int j = 0; j < frame->width * frame->channels * frame->channelDepth; j++)
       sum += frame->pScan0[ i * frame->stride + j ];
   LOG_INFO("Checksum of frame #" << markedVideo.getCurrentFrameNumber() << " is " << sum);
-}
-
-void Frame::OnSetVideoCutsDir(wxCommandEvent &)
-{
-  wxDirDialog dialog(this, wxT("Choose video cuts directory"), wxConfigBase::Get()->Read(seVideoCutsDir));
-  if (dialog.ShowModal() == wxID_OK)
-  {
-    wxConfigBase::Get()->Write(seVideoCutsDir, dialog.GetPath());
-    LOG_INFO("Video cuts directory is now " << dialog.GetPath());
-  }
-}
-
-void Frame::OnSetVideoCutterPath(wxCommandEvent &)
-{
-  wxFileDialog dialog(this, wxT("Choose video cutter script path"), wxEmptyString, wxConfigBase::Get()->Read(seVideoCutterPath), wxT("*.py"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (dialog.ShowModal() == wxID_OK)
-  {
-    wxConfigBase::Get()->Write(seVideoCutterPath, dialog.GetPath());
-    LOG_INFO("Video cutter path is now " << dialog.GetPath());
-  }
 }
 
 void Frame::OnDumpIntervalTo(wxCommandEvent &)
@@ -535,52 +513,6 @@ void Frame::OnSaveMarkupAs(wxCommandEvent &)
   }
 }
 
-void Frame::OnMarkCutStart(wxCommandEvent &)
-{
-  cutStartFrame = markedVideo.getCurrentFrameNumber();
-  Synchronize();
-}
-
-void Frame::OnMarkCutEnd(wxCommandEvent &)
-{
-  cutEndFrame = markedVideo.getCurrentFrameNumber();
-  Synchronize();
-}
-
-void Frame::OnCutVideo(wxCommandEvent &)
-{
-  if (cutStartFrame < 0 || cutEndFrame < 0 || cutStartFrame >= cutEndFrame)
-  {
-    LOG_ERROR("Invalid cut borders");
-    return;
-  }
-
-  wxString cutterPath = wxConfigBase::Get()->Read(seVideoCutterPath, wxT("video_cutter.py"));
-  if (!wxFileExists(cutterPath))
-  {
-    LOG_ERROR("Cannot find cutter at location " << cutterPath);
-    return;
-  }
-  wxString cutsDir = wxConfigBase::Get()->Read(seVideoCutsDir);
-
-  wxString cmd;
-  cmd.Printf("cmd.exe /C python.exe %s %s --output-dir=%s --start=%d --end=%d & pause", cutterPath.c_str(), markedVideo.getVideoName().c_str(), cutsDir.c_str(), cutStartFrame, cutEndFrame);
-  LOG_TRACE("Running " << cmd.c_str());
-
-  // FIXME: use wx-specific functions here
-  int res = system(cmd.c_str());
-  if (res)
-  {
-    LOG_ERROR("Cutter failed with return code " << res);
-  }
-  else
-  {
-    LOG_INFO("Video cut saved to directory " << cutsDir);
-    cutStartFrame = cutEndFrame = -1;
-  }
-  Synchronize();
-}
-
 void Frame::OnMark(wxCommandEvent &)
 {
   if (markedVideo.getCurrentInterval())
@@ -727,13 +659,9 @@ void Frame::UpdateStatusLine(const Interval *interval)
   }
   else
   {
-    s.Printf(wxT("Interval -/%d"), markedVideo.getTotalIntervals() - 1);
+    s.Printf(wxT("Interval -/%d"), markedVideo.getTotalIntervals());
     SetStatusText(s, StatusInterval);
   }
-
-  // cut borders
-  s.Printf(wxT("[%d,%d]"), cutStartFrame, cutEndFrame);
-  SetStatusText(s, StatusCutBorders);
 }
 
 bool Frame::Synchronize(bool force)
@@ -980,7 +908,6 @@ bool Frame::OpenVideo(const char *videoFileName, const char *markupName, int sta
   }
 
   intervalStartFrame = -1;
-  cutStartFrame = cutEndFrame = -1;
   oldWidth = oldHeight = -1;
   cutTop = -1;
 
@@ -1039,8 +966,6 @@ Frame::Frame(const CmdLineArguments &cmdLineArguments)
   , m_playbackTimer(this, PLAYBACK_TIMER_ID)
   , m_playbackState(playbackStopped)
   , markupChanged(false)
-  , cutStartFrame(-1)
-  , cutEndFrame(-1)
 {
   // initializing some parameters from the config
   wxConfigBase::Create();
@@ -1061,9 +986,9 @@ Frame::Frame(const CmdLineArguments &cmdLineArguments)
 
   // initializing status bar
   // BE CAREFUL AND MODIFY ALL THESE THREE LINES TOGETHER
-  wxStatusBar *statusBar = CreateStatusBar(7);
-  int widths[] = {-1, 100, 100, 100, 60, 80, 70};
-  statusBar->SetStatusWidths(7, widths);
+  wxStatusBar *statusBar = CreateStatusBar(5);
+  int widths[] = {-1, 100, 100, 80, 70};
+  statusBar->SetStatusWidths(5, widths);
 
   canvasHolder = new CanvasHolder(this);
   intervalPanel = new IntervalPanel(this);
@@ -1175,17 +1100,10 @@ void Frame::InitMenu()
   movieMenu->Append(ID_DUMP_ALL_INTERVALS_TO, wxT("Dump all intervals to..."), wxT("Dump all intervals to a given directory"));
   movieMenu->AppendSeparator();
   movieMenu->Append(ID_COPY_SHORT_MOVIE_NAME, wxT("Copy short name\tCtrl+Insert"), wxT("Copy short movie name to clipboard"));
-  movieMenu->AppendSeparator();
-  movieMenu->Append(ID_MARK_CUT_START_FRAME, wxT("Cut start\tCtrl+["), wxT("Mark cut start frame"));
-  movieMenu->Append(ID_MARK_CUT_END_FRAME, wxT("Cut end\tCtrl+]"), wxT("Mark cut end frame"));
-  movieMenu->Append(ID_CUT_VIDEO, wxT("Cut video\tShift+C"), wxT("Cut video piece"));
 
   wxMenu *settingsMenu = new wxMenu;
   settingsMenu->Append(ID_SET_MOVESIZE, wxT("&Move size\tCtrl+M"), wxT("Set on how many frames move forward and backward"));
   settingsMenu->Append(ID_SET_LITTLEMOVESIZE, wxT("L&ittle move size\tCtrl+I"), wxT("Set on how many frames move forward and backward"));
-  settingsMenu->AppendSeparator();
-  settingsMenu->Append(ID_SET_VIDEO_CUTS_DIR, wxT("Cuts &dir"), wxT("Set video cuts dir"));
-  settingsMenu->Append(ID_SET_VIDEO_CUTTER_PATH, wxT("&Cutter path"), wxT("Video cutter script path"));
   settingsMenu->AppendSeparator();
   settingsMenu->AppendCheckItem(ID_TOGGLE_AUTO_LOAD_MARKUP, wxT("&Auto load markup"), wxT("Try to load markup automatically"));
   settingsMenu->Check(ID_TOGGLE_AUTO_LOAD_MARKUP, markedVideo.getAutoLoadMarkup());
