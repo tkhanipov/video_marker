@@ -1,0 +1,20 @@
+This is a special ffmpeg version used to build video_marker.
+
+Windows headers and pre-built binaries are already added to the repository, while Linux stuff must be built manually.
+
+Under Linux you need to do the following:
+
+1. Unpack archive.
+2. Go to unpacked archive root directory.
+3. Apply patch using command
+   patch -p4 < PATH/TO/gst-ffmpeg-0.10.13-gcc-4.7-1.patch
+4. Run configure:
+   ./configure \
+     --enable-gpl \
+     --enable-version3 \
+     --enable-runtime-cpudetect \
+     --enable-memalign-hack \
+     --enable-shared \
+     --disable-static
+5. Run make
+6. Run sudo make install
