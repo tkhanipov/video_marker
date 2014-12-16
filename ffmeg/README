@@ -4,10 +4,12 @@ Windows headers and pre-built binaries are already added to the repository, whil
 
 Under Linux you need to do the following:
 
-1. Unpack archive.
-2. Go to unpacked archive root directory.
+0. Make sure that yasm is installed
+1. Unpack archive:
+   tar xjf ffmpeg-r26400-swscale-r32676.tar.bz2
+2. Go to unpacked archive root directory:
 3. Apply patch using command
-   patch -p4 < PATH/TO/gst-ffmpeg-0.10.13-gcc-4.7-1.patch
+   patch -p4 < ../gst-ffmpeg-0.10.13-gcc-4.7-1.patch
 4. Run configure:
    ./configure \
      --enable-gpl \
@@ -18,3 +20,4 @@ Under Linux you need to do the following:
      --disable-static
 5. Run make
 6. Run sudo make install
+7. Remove ffmpeg-r26400-swscale-r32676 directory.
