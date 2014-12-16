@@ -1,0 +1,135 @@
+Contents:
+  Introduction
+  Windows build
+  Linux build
+  License
+
+
+
+INTRODUCTION
+============
+
+video_marker is a simple linear video markup tool which can be used to mark video 
+intervals with certain attributes (values, labels, comments). It was developed 
+as an internal tool to markup vehicles for automatic testing of a Vision-based 
+industrial Automatic Vehicle Classifier. Features related only to vehicle 
+classifier have been removed and the code has been released to open source.
+
+This tool has the following features:
+  - two frame jump modes with adjustable steps;
+  - two speed playback with adjustable speeds;
+  - automatic markup loading;
+  - specifying video and markup from command line;
+  - commenting intervals;
+  - labeling intervals;
+  - navigation between intervals;
+  - scrolling to video position;
+  - dumping intervals to directories as set of images;
+  - gamma correction;
+  - creating screenshots.
+
+Full set of features is available through its main menu.
+
+The very initial version of this program was based on a simple wxWidgets tool
+for region merging algorithm improvements in a problem of color image segmentation
+which was used for the university thesis. A lot of code in this tool seems bulky
+and immature. Feel free to improve it!
+
+
+
+WINDOWS BUILD
+======= =====
+
+Windows build was tested on a machine running Windows 7 with the MS Visual Studio 9 2008 compiler.
+
+1. Install the latest cmake from http://www.cmake.org.
+
+2. Download and build wxWidgets 2.8:
+   - download https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12-Setup.exe
+   - run the file and install wxWidgets sources
+   - build wxWidgets with MS Visual Studio 9 2008 from build/msw/wx.dsp using appropriate configuration.
+     DO NOT enable unicode support
+
+2. Build video_marker:
+   cd path/to/video_marker
+   mkdir build.vc9
+   cd build.vc9
+   cmake .. -G "Visual Studio 9 2008"
+
+   If error occurs saying that wxWidgets was not found specify path to wxWidgets installation dir manually:
+   cmake .. -DwxWidgets_ROOT_DIR=path/to/wxWidgets -G "Visual Studio 9 2008"
+
+   Open video_marker.sln and build.
+
+3. Run video_marker from bin/win32.
+
+
+
+LINUX BUILD
+===== =====
+
+Linux build was tested on a x86_64 machine running freshly installed Ubuntu Desktop 14.04.1.
+Out of the box it has gcc 4.8.2.
+In the following instructions it is presumed that a similar machine is used.
+
+1. Install additional packages:
+   sudo apt-get install build-essential cmake yasm.
+
+2. Build and install wxWidgets 2.8 without unicode support:
+   wget https://sourceforge.net/projects/wxwindows/files/2.8.12/wxWidgets-2.8.12.tar.gz
+   tar xzf wxWidgets-2.8.12.tar.gz
+   cd wxWidgets-2.8.12
+   mkdir build-gtk
+   cd build-gtk
+   ../configure --disable-unicode
+   make
+   sudo make install
+
+3. Build ffmpeg libraries:
+   cd path/to/video_marker/ffmpeg
+   tar xjf ffmpeg-r26400-swscale-r32676.tar.bz2
+   cd ffmpeg-r26400-swscale-r32676
+   patch -p4 < ../gst-ffmpeg-0.10.13-gcc-4.7-1.patch
+   ./configure \
+     --enable-gpl \
+     --enable-version3 \
+     --enable-runtime-cpudetect \
+     --enable-memalign-hack \
+     --enable-shared \
+     --disable-static
+   make
+   sudo make install
+
+4. Build video_marker:
+   cd path/to/video_marker
+   mkdir build
+   cd build
+   cmake ..
+   make
+
+5. Run video_marker from bin/linux64
+
+
+
+LICENSE
+=======
+
+Copyright (c) 2014 Timur M. Khanipov <khanipov@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
