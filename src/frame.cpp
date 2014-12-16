@@ -1089,7 +1089,7 @@ void Frame::InitMenu()
   intervalMenu->Append(ID_MARK_NEW_END, wxT("Mark new &end\tZ"), wxT("Set interval end frame to the current frame"));
   intervalMenu->Append(ID_DELETE_INTERVAL, wxT("&Delete\tDelete"), wxT("Delete current interval"));
   intervalMenu->Append(ID_SET_TYPE, wxT("Type\tT"), wxT("Set interval type"));
-  intervalMenu->Append(ID_SET_COMMENT, wxT("Ñomment\tAlt+C"), wxT("Set interval comment"));
+  intervalMenu->Append(ID_SET_COMMENT, wxT("Comment\tAlt+C"), wxT("Set interval comment"));
   intervalMenu->AppendSeparator();
   intervalMenu->Append(ID_DUMP_INTERVAL, wxT("D&ump\tCtrl+D"), wxT("Dump current interval's frames"));
   intervalMenu->Append(ID_DUMP_INTERVAL_TO, wxT("Dump t&o..."), wxT("Dump current interval's frames to a given directory"));
