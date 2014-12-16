@@ -278,16 +278,18 @@ void Frame::OnDumpIntervalTo(wxCommandEvent &)
   {
     wxConfigBase::Get()->Write(seDefaultDumpDir, dialog.GetPath());
     LOG_INFO("Chosen dir " << dialog.GetPath());
-    OnDumpInterval(wxCommandEvent());
+    wxCommandEvent dummy;
+    OnDumpInterval(dummy);
   }
 }
 
 void Frame::OnDumpInterval(wxCommandEvent &)
 {
-  std::string dumpDir = wxConfigBase::Get()->Read(seDefaultDumpDir);
+  std::string dumpDir = wxConfigBase::Get()->Read(seDefaultDumpDir).c_str();
   if (dumpDir == "")
   {
-    OnDumpIntervalTo(wxCommandEvent());
+    wxCommandEvent dummy;
+    OnDumpIntervalTo(dummy);
     return;
   }
   const Interval *interval = markedVideo.getCurrentInterval();
@@ -312,10 +314,11 @@ void Frame::OnDumpInterval(wxCommandEvent &)
 
 void Frame::OnDumpAllIntervals(wxCommandEvent &)
 {
-  std::string dumpDir = wxConfigBase::Get()->Read(seDefaultDumpDir);
+  std::string dumpDir = wxConfigBase::Get()->Read(seDefaultDumpDir).c_str();
   if (dumpDir == "")
   {
-    OnDumpAllIntervalsTo(wxCommandEvent());
+    wxCommandEvent dummy;
+    OnDumpAllIntervalsTo(dummy);
     return;
   }
   int currentFrame = markedVideo.getCurrentFrameNumber();
@@ -324,7 +327,8 @@ void Frame::OnDumpAllIntervals(wxCommandEvent &)
     markedVideo.gotoInterval(i);
     Synchronize();
     LOG_INFO("Dumping interval " << i);
-    OnDumpInterval(wxCommandEvent());
+    wxCommandEvent dummy;
+    OnDumpInterval(dummy);
   }
   markedVideo.goToFrame(currentFrame);
   Synchronize();
@@ -337,7 +341,8 @@ void Frame::OnDumpAllIntervalsTo(wxCommandEvent &)
   {
     wxConfigBase::Get()->Write(seDefaultDumpDir, dialog.GetPath());
     LOG_INFO("Chosen dir " << dialog.GetPath());
-    OnDumpAllIntervals(wxCommandEvent());
+    wxCommandEvent dummy;
+    OnDumpAllIntervals(dummy);
   }
 }
 
@@ -350,7 +355,7 @@ void Frame::OnSetComment(wxCommandEvent &)
   wxTextEntryDialog dialog(this, wxT("Interval comment"), wxT("Input comment:"), str);
   if (dialog.ShowModal() == wxID_OK)
   {
-    std::string value = dialog.GetValue();
+    std::string value = dialog.GetValue().c_str();
     for (unsigned i = 0; i < value.length(); i++)
       if (!isalnum((unsigned char) value[i]) && !isspace((unsigned char) value[i]))
       {
@@ -380,7 +385,7 @@ void Frame::OnSetGamma(wxCommandEvent &)
     }
     gamma = newGamma;
     for (int i = 0; i < 256; i++)
-      gammaMatrix[i] = unsigned char(255.0 * pow(i / 255.0, gamma));
+      gammaMatrix[i] = (unsigned char)(255.0 * pow(i / 255.0, gamma));
     Synchronize();
   }
 }
@@ -492,7 +497,10 @@ void Frame::OnLoadMarkup(wxCommandEvent &)
 void Frame::OnSaveMarkup(wxCommandEvent &)
 {
   if (markedVideo.getMarkupName() == "")
-    OnSaveMarkupAs(wxCommandEvent());
+  {
+    wxCommandEvent dummy;
+    OnSaveMarkupAs(dummy);
+  }
   else
   {
     if (markedVideo.saveMarkup( markedVideo.getMarkupName() ))
