@@ -1,12 +1,11 @@
 project(video_marker)
 
-option(wxWidgets_ROOT_DIR "Path where wxWidgets 2.8 is installed" "")
-if(wxWidgets_ROOT_DIR)
-  message(STATUS "Searching for wxWidgets in directory ${wxWidgets_ROOT_DIR}")
-endif()
-
 if(WIN32)
   set(wxWidgets_CONFIGURATION msw)
+  option(wxWidgets_ROOT_DIR "Path where wxWidgets 2.8 is installed" "")
+  if(wxWidgets_ROOT_DIR)
+    message(STATUS "Searching for wxWidgets in directory ${wxWidgets_ROOT_DIR}")
+  endif()
 else()
   # For some reason these settings don't work so they are set manually in wxWidgets_CONFIG_OPTIONS.
   # See wx-config -h for the full set.
@@ -15,9 +14,6 @@ else()
   # set(wxWidgets_USE_UNIVERSAL OFF)
   # set(wxWidgets_USE_STATIC ON)
   set(wxWidgets_CONFIG_OPTIONS --unicode=no --universal=no --debug=no)
-  if(wxWidgets_ROOT_DIR)
-    set(wxWidgets_CONFIG_OPTIONS --prefix=${wxWidgets_ROOT_DIR} ${wxWidgets_CONFIG_OPTIONS})
-  endif()
 endif()
 
 
