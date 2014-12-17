@@ -76,7 +76,7 @@ Out of the box it has gcc 4.8.2.
 In the following instructions it is presumed that a similar machine is used.
 
 1. Install additional packages:
-   sudo apt-get install build-essential cmake yasm.
+   sudo apt-get install build-essential cmake yasm libgtk2.0-dev
 
 2. Build and install wxWidgets 2.8 without unicode support:
    wget https://sourceforge.net/projects/wxwindows/files/2.8.12/wxWidgets-2.8.12.tar.gz
