@@ -55,17 +55,6 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS -DNOMINMAX)
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fno-omit-frame-pointer -Wno-attributes -pthread -std=gnu99")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-omit-frame-pointer -Wno-attributes -pthread")
-
-  add_definitions(-DCOMFORT_GNU_COMPILER)
-
-  # Strange, but this fixes some troubles with undefined references.
-  # TODO: investigate issues
-  add_definitions(-Wl,--no-undefined)
-endif()
-
 # global include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pugixml)
