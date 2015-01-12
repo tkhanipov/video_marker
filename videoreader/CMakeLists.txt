@@ -1,13 +1,13 @@
 add_library(videoreader
-  ffmpegvideo.cpp
-  ffmpegvideo.h
-  videoreader.cpp
   videoreader.h
-  videoreader_ffmpeg.cpp
-  videoreader_ffmpeg.h
+  src/ffmpegvideo.cpp
+  src/ffmpegvideo.h
+  src/videoreader.cpp
+  src/videoreader_ffmpeg.cpp
+  src/videoreader_ffmpeg.h
 )
 
-target_link_libraries(video_reader
+target_link_libraries(videoreader
   avcodec
   avcore
   avdevice

@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include <sstream>
 #include <algorithm>
 
-#include "videoreader.h"
+#include <videoreader.h>
 #include <wx/image.h>
 
 #include "markedvideo.h"

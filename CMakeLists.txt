@@ -58,6 +58,7 @@ endif()
 # global include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pugixml)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/videoreader)
 if(MSVC)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/compat)
 endif()
@@ -74,4 +75,5 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib/${VIDEO
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/lib/${VIDEO_MARKER_ARCH}/release)
 
 add_subdirectory(pugixml)
+add_subdirectory(videoreader)
 add_subdirectory(src)

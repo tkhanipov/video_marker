@@ -24,11 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "logger.h"
 
 #include <wx/wx.h>
+#include <videoreader.h>
 
-#include "videoreader.h"
+#include "logger.h"
 #include "markedvideo.h"
 
 class IntervalPanel;
