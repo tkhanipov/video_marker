@@ -1,7 +1,7 @@
 /*
  * Written by Timur Khanipov and released to the public domain,
  * as explained at http://creativecommons.org/publicdomain/zero/1.0/
-*/
+ */
 
 
 // this is needed to make stdint.h define the UINT64_C type which
