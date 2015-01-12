@@ -42,23 +42,10 @@ add_executable(video_marker WIN32
   interval_panel.h
   video_markup.h
   video_markup.cpp
-  ffmpegvideo.cpp
-  ffmpegvideo.h
-  videoreader.cpp
-  videoreader.h
-  videoreader_ffmpeg.cpp
-  videoreader_ffmpeg.h
 )
 
 target_link_libraries(video_marker
-  avcodec
-  avcore
-  avdevice
-  avfilter
-  avformat
-  avutil
-  swscale
-
+  videoreader
   ${wxWidgets_LIBRARIES}
   pugixml
 )
