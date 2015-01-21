@@ -50,7 +50,7 @@ Windows build was tested on a machine running Windows 7 with the MS Visual Studi
 2. Download and build wxWidgets 2.8:
    - download https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12-Setup.exe
    - run the file and install wxWidgets sources
-   - build wxWidgets with MS Visual Studio 9 2008 from build/msw/wx.dsp using appropriate configuration.
+   - build wxWidgets with MS Visual Studio 9 2008 from build/msw/wx.dsp using configurations 'Release' and 'Debug'
      DO NOT enable unicode support
 
 3. Build video_marker:
