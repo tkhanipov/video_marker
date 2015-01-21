@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<video_markup>
+	<interval start="31" end="60" type="1" y_border="21">
+		<comment>finger</comment>
+		<label>bad</label>
+	</interval>
+	<interval start="116" end="145" type="2" y_border="34">
+		<comment>episode 1</comment>
+	</interval>
+	<interval start="185" end="244" type="4" y_border="177">
+		<comment>bra and hair</comment>
+		<label>interesting</label>
+	</interval>
+	<interval start="274" end="332" type="2" y_border="26">
+		<comment>dance</comment>
+		<label>funny</label>
+		<label>interesting</label>
+	</interval>
+	<interval start="399" end="454" type="4" y_border="-1">
+		<comment>breast</comment>
+	</interval>
+	<interval start="483" end="526" type="1" y_border="35">
+		<comment>in between</comment>
+	</interval>
+	<interval start="560" end="575" type="1" y_border="-1">
+		<comment>shake leg</comment>
+		<label>interesting</label>
+	</interval>
+	<interval start="641" end="654" type="1" y_border="-1">
+		<comment>3 people</comment>
+	</interval>
+</video_markup>
